@@ -11,6 +11,7 @@ export default defineNuxtConfig({
       autoprefixer: {},
     },
   },
+  extends: ['./layers/editor'],
   css: ['~/assets/main.css'],
   shadcn: {
     /**
