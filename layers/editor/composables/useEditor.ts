@@ -1,13 +1,12 @@
-import type { Canvas } from 'fabric'
-import { FabricObject, Rect, Shadow } from 'fabric'
+import { fabric } from 'fabric'
 
 export function useEditor() {
-  function init(containerEl: HTMLDivElement, canvasEl: Canvas) {
-    const canvas = ref<Canvas | null>(null)
+  function init(containerEl: HTMLDivElement, canvasEl: fabric.Canvas) {
+    const canvas = ref<fabric.Canvas | null>(null)
     const container = ref<HTMLDivElement | null>(null)
 
     useAutoResize({ container, canvas })
-    FabricObject.prototype.set({
+    fabric.Object.prototype.set({
       cornerColor: '#FFF',
       cornerStyle: 'circle',
       borderColor: '#3b82f6',
@@ -17,14 +16,14 @@ export function useEditor() {
       cornerStrokeColor: '#3b82f6',
     })
 
-    const initialWorkspace = new Rect({
+    const initialWorkspace = new fabric.Rect({
       width: 900,
       height: 1200,
       name: 'clip',
       fill: 'white',
       selectable: false,
       hasControls: false,
-      shadow: new Shadow({
+      shadow: new fabric.Shadow({
         color: 'rgba(0,0,0,0.8)',
         blur: 5,
       }),

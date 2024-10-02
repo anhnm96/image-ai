@@ -6,5 +6,6 @@ export default antfu({
     'antfu/if-newline': 'off',
     'node/prefer-global/process': 'off',
     'style/brace-style': ['error', '1tbs'],
+    'vue/no-unused-refs': 'off',
   },
 })

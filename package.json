@@ -15,7 +15,8 @@
   "dependencies": {
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.1",
-    "fabric": "^6.4.2",
+    "fabric": "5.3.0-browser",
+    "jsdom": "^25.0.1",
     "lucide-vue-next": "^0.446.0",
     "nuxt": "^3.13.0",
     "radix-vue": "^1.9.6",
@@ -27,6 +28,9 @@
   "devDependencies": {
     "@antfu/eslint-config": "^3.7.3",
     "@nuxtjs/tailwindcss": "^6.12.1",
+    "@types/fabric": "^5.3.9",
+    "@vueuse/core": "^11.1.0",
+    "@vueuse/nuxt": "^11.1.0",
     "autoprefixer": "^10.4.20",
     "eslint": "^9.11.1",
     "postcss": "^8.4.47",

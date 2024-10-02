@@ -1,18 +1,19 @@
 <script lang="ts" setup>
-import { Canvas } from 'fabric'
+import { fabric } from 'fabric'
 
 const { init } = useEditor()
 
 const containerEl = useTemplateRef('container')
 const canvasEl = useTemplateRef('canvas')
 
-onMounted(() => {
-  const canvas = new Canvas(canvasEl.value!, {
+onMounted(async () => {
+  await nextTick()
+
+  const canvas = new fabric.Canvas(canvasEl.value!, {
     controlsAboveOverlay: true,
     preserveObjectStacking: true,
 
   })
-
   init(containerEl.value!, canvas)
 })
 </script>
