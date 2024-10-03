@@ -10,10 +10,10 @@ export function useAutoResize({ canvas, container }: UseAutoResizeProps) {
 
   function autoZoom() {
     if (!canvas.value || !container.value) return
-    const width = container.value?.offsetWidth
-    const height = container.value?.offsetHeight
-    canvas.value?.setWidth(width)
-    canvas.value?.setWidth(height)
+    const width = container.value.offsetWidth
+    const height = container.value.offsetHeight
+    canvas.value.setWidth(width)
+    canvas.value.setWidth(height)
 
     const center = canvas.value.getCenter()
     const zoomRatio = 0.85

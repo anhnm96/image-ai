@@ -1,5 +1,9 @@
 <script lang="ts" setup>
+import type { ActiveTool } from '../types'
+import { cn } from '~/lib/utils'
 
+defineProps<{ activeTool: ActiveTool }>()
+const activeTool = defineModel<ActiveTool>('activeTool')
 </script>
 
 <template>
@@ -27,7 +31,11 @@
       </DropdownMenu>
       <Separator orientation="vertical" class="mx-2" />
       <Hint label="Select" side="bottom" :side-offset="10">
-        <Button variant="ghost" size="icon">
+        <Button
+          variant="ghost" size="icon"
+          :class="[cn(activeTool === 'select' && 'bg-gray-100')]"
+          @click="activeTool = 'select'"
+        >
           <Icon name="lucide:mouse-pointer-click" />
         </Button>
       </Hint>
