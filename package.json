@@ -27,6 +27,8 @@
   },
   "devDependencies": {
     "@antfu/eslint-config": "^3.7.3",
+    "@iconify-json/lucide": "^1.2.6",
+    "@nuxt/icon": "^1.5.2",
     "@nuxtjs/tailwindcss": "^6.12.1",
     "@types/fabric": "^5.3.9",
     "@vueuse/core": "^11.1.0",

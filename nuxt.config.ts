@@ -13,7 +13,7 @@ export default defineNuxtConfig({
   },
   extends: ['./layers/editor'],
   css: ['~/assets/main.css'],
-  modules: ['@vueuse/nuxt'],
+  modules: ['@vueuse/nuxt', '@nuxt/icon'],
   shadcn: {
     /**
      * Prefix for all the imported component
@@ -24,5 +24,23 @@ export default defineNuxtConfig({
      * @default "./components/ui"
      */
     componentDir: './components/ui',
+  },
+  icon: {
+    clientBundle: {
+      scan: true,
+    },
+  },
+  components: {
+    dirs: [
+      {
+        path: '~/components/ui',
+        extensions: ['vue'],
+        pathPrefix: false,
+      },
+      {
+        path: '~/components',
+        extensions: ['vue'],
+      },
+    ],
   },
 })
