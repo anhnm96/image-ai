@@ -1,8 +1,8 @@
 <script lang="ts" setup>
-import type { ActiveTool } from '../types'
+import type { ActiveTool, Editor } from '../types'
 import { cn } from '~/lib/utils'
 
-defineProps<{ activeTool: ActiveTool }>()
+defineProps<{ activeTool: ActiveTool, editor?: Editor }>()
 </script>
 
 <template>
@@ -20,22 +20,28 @@ defineProps<{ activeTool: ActiveTool }>()
       <div class="grid grid-cols-3 gap-4 p-4">
         <ShapeTool
           icon="ph:circle-fill"
+          @click="editor?.addCircle()"
         />
         <ShapeTool
           icon="ph:square-fill"
+          @click="editor?.addSoftRectangle()"
         />
         <ShapeTool
           icon="ph:square-duotone"
+          @click="editor?.addRectangle()"
         />
         <ShapeTool
           icon="ph:triangle-fill"
+          @click="editor?.addTriangle()"
         />
         <ShapeTool
           icon="ph:triangle-fill"
           icon-class="rotate-180"
+          @click="editor?.addInverseTriangle()"
         />
         <ShapeTool
           icon="ph:diamond-fill"
+          @click="editor?.addDiamond()"
         />
       </div>
     </ScrollArea>

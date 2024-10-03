@@ -11,7 +11,7 @@ function setActiveTool(tool: ActiveTool) {
   activeTool.value = tool
 }
 
-const { init } = useEditor()
+const { editor, init } = useEditor()
 const containerEl = useTemplateRef('container')
 const canvasEl = useTemplateRef('canvas')
 
@@ -32,7 +32,7 @@ onMounted(async () => {
     <Navbar v-model:active-tool="activeTool" />
     <div class="absolute h-[calc(100%-68px)] w-full top-[68px] flex">
       <Sidebar :active-tool="activeTool" @update:active-tool="setActiveTool" />
-      <ShapeSidebar :active-tool="activeTool" />
+      <ShapeSidebar :active-tool="activeTool" :editor="editor" />
       <main class="bg-muted flex-1 overflow-auto relative flex flex-col">
         <Toolbar />
         <div ref="container" class="flex-1 h-[calc(100%-124px)] bg-muted">
