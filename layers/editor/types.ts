@@ -71,16 +71,13 @@ export interface BuildEditorProps {
   // copy: () => void
   // paste: () => void
   canvas: fabric.Canvas
-  // fillColor: string
-  // strokeColor: string
-  // strokeWidth: number
-  // selectedObjects: fabric.Object[]
+  fillColor: Ref<string>
+  strokeColor: Ref<string>
+  strokeWidth: Ref<number>
+  selectedObjects: Ref<fabric.Object[]>
   // strokeDashArray: number[]
   // fontFamily: string
   // setStrokeDashArray: (value: number[]) => void
-  // setFillColor: (value: string) => void
-  // setStrokeColor: (value: string) => void
-  // setStrokeWidth: (value: number) => void
   // setFontFamily: (value: string) => void
 }
 
@@ -91,4 +88,13 @@ export interface Editor {
   addTriangle: () => void
   addInverseTriangle: () => void
   addDiamond: () => void
+  setFillColor: (value: string) => void
+  setStrokeColor: (value: string) => void
+  setStrokeWidth: (value: number) => void
+  fillColor: Ref<string>
+  strokeColor: Ref<string>
+  strokeWidth: Ref<number>
+  selectedObjects: Ref<fabric.Object[]>
+  canvas: fabric.Canvas
+  getActiveFillColor: () => string
 }

@@ -1,7 +1,8 @@
 import { fabric } from 'fabric'
-import { type BuildEditorProps, CIRCLE_OPTIONS, DIAMOND_OPTIONS, type Editor, RECTANGLE_OPTIONS, TRIANGLE_OPTIONS } from '../types.js'
+import { type BuildEditorProps, CIRCLE_OPTIONS, DIAMOND_OPTIONS, type Editor, FILL_COLOR, RECTANGLE_OPTIONS, STROKE_COLOR, STROKE_WIDTH, TRIANGLE_OPTIONS } from '../types.js'
+import { isTextType } from '../utils.js'
 
-function buildEditor({ canvas }: BuildEditorProps): Editor {
+function buildEditor({ canvas, fillColor, strokeColor, strokeWidth, selectedObjects }: BuildEditorProps): Editor {
   function getWorkspace() {
     return canvas.getObjects().find(obj => obj.name === 'clip')
   }
@@ -22,9 +23,41 @@ function buildEditor({ canvas }: BuildEditorProps): Editor {
   }
 
   return {
+    setFillColor: (val: string) => {
+      fillColor.value = val
+      canvas.getActiveObjects().forEach((object) => {
+        object.set({ fill: val })
+      })
+      canvas.renderAll()
+    },
+    setStrokeColor: (val: string) => {
+      strokeColor.value = val
+      canvas.getActiveObjects().forEach((object) => {
+        // Text types don't have stroke
+        if (isTextType(object.type)) {
+          object.set({ fill: val })
+          return
+        }
+
+        object.set({ stroke: val })
+      })
+      canvas.freeDrawingBrush.color = val
+      canvas.renderAll()
+    },
+    setStrokeWidth: (val: number) => {
+      strokeWidth.value = val
+      canvas.getActiveObjects().forEach((object) => {
+        object.set({ strokeWidth: val })
+      })
+      canvas.freeDrawingBrush.width = val
+      canvas.renderAll()
+    },
     addCircle: () => {
       const object = new fabric.Circle({
         ...CIRCLE_OPTIONS,
+        fill: fillColor.value,
+        stroke: strokeColor.value,
+        strokeWidth: strokeWidth.value,
       })
       addToCanvas(object)
     },
@@ -33,18 +66,27 @@ function buildEditor({ canvas }: BuildEditorProps): Editor {
         ...RECTANGLE_OPTIONS,
         rx: 50,
         ry: 50,
+        fill: fillColor.value,
+        stroke: strokeColor.value,
+        strokeWidth: strokeWidth.value,
       })
       addToCanvas(object)
     },
     addRectangle: () => {
       const object = new fabric.Rect({
         ...RECTANGLE_OPTIONS,
+        fill: fillColor.value,
+        stroke: strokeColor.value,
+        strokeWidth: strokeWidth.value,
       })
       addToCanvas(object)
     },
     addTriangle: () => {
       const object = new fabric.Triangle({
         ...TRIANGLE_OPTIONS,
+        fill: fillColor.value,
+        stroke: strokeColor.value,
+        strokeWidth: strokeWidth.value,
       })
 
       addToCanvas(object)
@@ -61,6 +103,9 @@ function buildEditor({ canvas }: BuildEditorProps): Editor {
         ],
         {
           ...TRIANGLE_OPTIONS,
+          fill: fillColor.value,
+          stroke: strokeColor.value,
+          strokeWidth: strokeWidth.value,
         },
       )
 
@@ -79,22 +124,54 @@ function buildEditor({ canvas }: BuildEditorProps): Editor {
         ],
         {
           ...DIAMOND_OPTIONS,
+          fill: fillColor.value,
+          stroke: strokeColor.value,
+          strokeWidth: strokeWidth.value,
         },
       )
       addToCanvas(object)
     },
+    getActiveFillColor: () => {
+      const selectedObject = selectedObjects.value[0]
+
+      if (!selectedObject) {
+        return fillColor.value
+      }
+
+      const value = selectedObject.get('fill') || fillColor.value
+
+      // Currently, gradients & patterns are not supported
+      return value as string
+    },
+    canvas,
+    fillColor,
+    strokeColor,
+    strokeWidth,
+    selectedObjects,
   }
 }
 
 export function useEditor() {
   const canvas = ref<fabric.Canvas | null>(null)
   const container = ref<HTMLDivElement | null>(null)
+  const selectedObjects = ref<fabric.Object[]>([])
+  const fillColor = ref(FILL_COLOR)
+  const strokeColor = ref(STROKE_COLOR)
+  const strokeWidth = ref(STROKE_WIDTH)
 
   useAutoResize({ container, canvas })
 
+  useCanvasEvents({ canvas, selectedObjects })
+
   const editor = computed(() => {
     if (!canvas.value) return
-    return buildEditor({ canvas: canvas.value })
+    return buildEditor({
+      canvas: canvas.value,
+      fillColor,
+      strokeColor,
+      strokeWidth,
+      selectedObjects,
+    })
   })
 
   function init(containerEl: HTMLDivElement, canvasEl: fabric.Canvas) {

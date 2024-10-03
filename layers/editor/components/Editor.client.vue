@@ -33,8 +33,16 @@ onMounted(async () => {
     <div class="absolute h-[calc(100%-68px)] w-full top-[68px] flex">
       <Sidebar :active-tool="activeTool" @update:active-tool="setActiveTool" />
       <ShapeSidebar :active-tool="activeTool" :editor="editor" />
+      <FillColorSidebar
+        v-model:active-tool="activeTool"
+        :editor="editor"
+        @close="activeTool = 'select'"
+      />
       <main class="bg-muted flex-1 overflow-auto relative flex flex-col">
-        <Toolbar />
+        <Toolbar
+          :key="JSON.stringify(editor?.canvas.getActiveObject())"
+          v-model:active-tool="activeTool" :editor="editor"
+        />
         <div ref="container" class="flex-1 h-[calc(100%-124px)] bg-muted">
           <canvas ref="canvas" />
         </div>

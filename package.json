@@ -13,6 +13,7 @@
     "lintf": "eslint . --fix"
   },
   "dependencies": {
+    "@ckpack/vue-color": "^1.6.0",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.1",
     "fabric": "5.3.0-browser",
@@ -32,6 +33,7 @@
     "@nuxt/icon": "^1.5.2",
     "@nuxtjs/tailwindcss": "^6.12.1",
     "@types/fabric": "^5.3.9",
+    "@types/vue-color": "^2.4.8",
     "@vueuse/core": "^11.1.0",
     "@vueuse/nuxt": "^11.1.0",
     "autoprefixer": "^10.4.20",
