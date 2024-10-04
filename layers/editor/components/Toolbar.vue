@@ -2,6 +2,7 @@
 import type { ActiveTool } from '../types'
 import { cn } from '~/lib/utils'
 import { useEditorStore } from '../stores/editor'
+import { isTextType } from '../utils'
 
 defineProps<{ activeTool: ActiveTool }>()
 defineEmits<{
@@ -9,6 +10,10 @@ defineEmits<{
 }>()
 
 const editorStore = useEditorStore()
+const isText = ref(isTextType(editorStore.selectedObject?.type || ''))
+watch(() => editorStore.selectedObject, (val) => {
+  isText.value = isTextType(val?.type || '')
+})
 // const properties = reactive({
 // fillColor: editorStore.getActiveFillColor,
 // strokeColor: initialStrokeColor,
@@ -40,33 +45,35 @@ const editorStore = useEditorStore()
           />
         </Button>
       </Hint>
-      <Hint label="Stroke color" side="bottom" :side-offset="5">
-        <Button
-          size="icon"
-          variant="ghost"
-          :class="[cn(
-            activeTool === 'stroke-color' && 'bg-gray-100',
-          )]"
-          @click="$emit('update:activeTool', 'stroke-color')"
-        >
-          <div
-            class="rounded-sm size-4 border-2 bg-white"
-            :style="{ borderColor: editorStore.getActiveStrokeColor }"
-          />
-        </Button>
-      </Hint>
-      <Hint label="Stroke width" side="bottom" :side-offset="5">
-        <Button
-          size="icon"
-          variant="ghost"
-          :class="[cn(
-            activeTool === 'stroke-width' && 'bg-gray-100',
-          )]"
-          @click="$emit('update:activeTool', 'stroke-width')"
-        >
-          <Icon class="text-black" name="radix-icons:border-width" />
-        </Button>
-      </Hint>
+      <template v-if="!isText">
+        <Hint label="Stroke color" side="bottom" :side-offset="5">
+          <Button
+            size="icon"
+            variant="ghost"
+            :class="[cn(
+              activeTool === 'stroke-color' && 'bg-gray-100',
+            )]"
+            @click="$emit('update:activeTool', 'stroke-color')"
+          >
+            <div
+              class="rounded-sm size-4 border-2 bg-white"
+              :style="{ borderColor: editorStore.getActiveStrokeColor }"
+            />
+          </Button>
+        </Hint>
+        <Hint label="Stroke width" side="bottom" :side-offset="5">
+          <Button
+            size="icon"
+            variant="ghost"
+            :class="[cn(
+              activeTool === 'stroke-width' && 'bg-gray-100',
+            )]"
+            @click="$emit('update:activeTool', 'stroke-width')"
+          >
+            <Icon class="text-black" name="radix-icons:border-width" />
+          </Button>
+        </Hint>
+      </template>
       <Hint label="Bring forward" side="bottom" :side-offset="5">
         <Button
           size="icon"

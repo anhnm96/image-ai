@@ -1,5 +1,5 @@
 import { fabric } from 'fabric'
-import { type ActiveTool, CIRCLE_OPTIONS, DIAMOND_OPTIONS, FILL_COLOR, RECTANGLE_OPTIONS, STROKE_COLOR, STROKE_DASH_ARRAY, STROKE_WIDTH, TRIANGLE_OPTIONS } from '../types.js'
+import { type ActiveTool, CIRCLE_OPTIONS, DIAMOND_OPTIONS, FILL_COLOR, RECTANGLE_OPTIONS, STROKE_COLOR, STROKE_DASH_ARRAY, STROKE_WIDTH, TEXT_OPTIONS, TRIANGLE_OPTIONS } from '../types.js'
 import { isTextType } from '../utils.js'
 
 export const useEditorStore = defineStore('editor', () => {
@@ -238,6 +238,16 @@ export const useEditorStore = defineStore('editor', () => {
       object.set({ opacity: value })
     })
     canvas.value?.renderAll()
+  };
+
+  function addText(value: string, options?: fabric.ITextboxOptions) {
+    const object = new fabric.Textbox(value, {
+      ...TEXT_OPTIONS,
+      fill: fillColor.value,
+      ...options,
+    })
+
+    addToCanvas(object)
   }
 
   const getActiveStrokeColor = computed(() => {
@@ -299,6 +309,7 @@ export const useEditorStore = defineStore('editor', () => {
     bringForward,
     sendBackwards,
     changeOpacity,
+    addText,
     selectedObject,
     getActiveFillColor,
     getActiveStrokeColor,
