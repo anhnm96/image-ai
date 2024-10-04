@@ -13,7 +13,7 @@ export default defineNuxtConfig({
   },
   extends: ['./layers/editor'],
   css: ['~/assets/main.css'],
-  modules: ['@vueuse/nuxt', '@nuxt/icon'],
+  modules: ['@vueuse/nuxt', '@nuxt/icon', '@pinia/nuxt'],
   shadcn: {
     /**
      * Prefix for all the imported component

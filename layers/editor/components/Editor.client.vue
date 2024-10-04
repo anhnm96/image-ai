@@ -1,6 +1,7 @@
 <script lang="ts" setup>
 import type { ActiveTool } from '../types'
 import { fabric } from 'fabric'
+import { useEditorStore } from '../stores/editor'
 
 const activeTool = ref<ActiveTool>('select')
 function setActiveTool(tool: ActiveTool) {
@@ -11,7 +12,7 @@ function setActiveTool(tool: ActiveTool) {
   activeTool.value = tool
 }
 
-const { editor, init } = useEditor()
+const editorStore = useEditorStore()
 const containerEl = useTemplateRef('container')
 const canvasEl = useTemplateRef('canvas')
 
@@ -23,7 +24,7 @@ onMounted(async () => {
     preserveObjectStacking: true,
 
   })
-  init(containerEl.value!, canvas)
+  editorStore.init(containerEl.value!, canvas)
 })
 </script>
 
@@ -32,16 +33,15 @@ onMounted(async () => {
     <Navbar v-model:active-tool="activeTool" />
     <div class="absolute h-[calc(100%-68px)] w-full top-[68px] flex">
       <Sidebar :active-tool="activeTool" @update:active-tool="setActiveTool" />
-      <ShapeSidebar :active-tool="activeTool" :editor="editor" />
+      <ShapeSidebar :active-tool="activeTool" />
       <FillColorSidebar
         v-model:active-tool="activeTool"
-        :editor="editor"
         @close="activeTool = 'select'"
       />
       <main class="bg-muted flex-1 overflow-auto relative flex flex-col">
         <Toolbar
-          :key="JSON.stringify(editor?.canvas.getActiveObject())"
-          v-model:active-tool="activeTool" :editor="editor"
+          :key="JSON.stringify(editorStore.canvas?.getActiveObject())"
+          v-model:active-tool="activeTool"
         />
         <div ref="container" class="flex-1 h-[calc(100%-124px)] bg-muted">
           <canvas ref="canvas" />

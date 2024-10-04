@@ -1,29 +1,30 @@
 <script lang="ts" setup>
-import type { ActiveTool, Editor } from '../types'
+import type { ActiveTool } from '../types'
 import { cn } from '~/lib/utils'
+import { useEditorStore } from '../stores/editor'
 
-const props = defineProps<{ editor: Editor | undefined, activeTool: ActiveTool }>()
+defineProps<{ activeTool: ActiveTool }>()
 defineEmits<{
   'update:activeTool': [tool: ActiveTool]
 }>()
 
-const fillProperty = props.editor?.fillColor
-const properties = reactive({
-  fillColor: fillProperty,
-  // strokeColor: initialStrokeColor,
-  // fontFamily: initialFontFamily,
-  // fontWeight: initialFontWeight,
-  // fontStyle: initialFontStyle,
-  // fontLinethrough: initialFontLinethrough,
-  // fontUnderline: initialFontUnderline,
-  // textAlign: initialTextAlign,
-  // fontSize: initialFontSize,
-})
+const editorStore = useEditorStore()
+// const properties = reactive({
+// fillColor: editorStore.getActiveFillColor,
+// strokeColor: initialStrokeColor,
+// fontFamily: initialFontFamily,
+// fontWeight: initialFontWeight,
+// fontStyle: initialFontStyle,
+// fontLinethrough: initialFontLinethrough,
+// fontUnderline: initialFontUnderline,
+// textAlign: initialTextAlign,
+// fontSize: initialFontSize,
+// })
 </script>
 
 <template>
   <div class="shrink-0 h-[56px] border-b bg-white w-full flex items-center overflow-x-auto z-[49] p-2 gap-x-2">
-    <div v-if="props.editor?.selectedObjects.value.length" class="flex items-center h-full justify-center">
+    <div v-if="editorStore.selectedObjects.length" class="flex items-center h-full justify-center">
       <Hint label="Color" side="bottom" :side-offset="5">
         <Button
           size="icon"
@@ -35,7 +36,7 @@ const properties = reactive({
         >
           <div
             class="rounded-sm size-4 border"
-            :style="{ backgroundColor: properties.fillColor }"
+            :style="{ backgroundColor: editorStore.getActiveFillColor }"
           />
         </Button>
       </Hint>

@@ -1,14 +1,16 @@
 <script lang="ts" setup>
-import type { ActiveTool, Editor } from '../types'
+import type { ActiveTool } from '../types'
 import { cn } from '~/lib/utils'
 import { FILL_COLOR } from '../types'
+import { useEditorStore } from '../stores/editor';
 
-const props = defineProps<{ activeTool: ActiveTool, editor?: Editor }>()
+defineProps<{ activeTool: ActiveTool }>()
 defineEmits<{
   'update:activeTool': [tool: ActiveTool]
 }>()
 
-const value = props.editor?.getActiveFillColor() || FILL_COLOR
+const editorStore = useEditorStore()
+const value = editorStore.getActiveFillColor || FILL_COLOR
 </script>
 
 <template>
@@ -26,7 +28,7 @@ const value = props.editor?.getActiveFillColor() || FILL_COLOR
       <div class="p-4 space-y-6">
         <ColorPicker
           :model-value="value"
-          @update:model-value="editor?.setFillColor"
+          @update:model-value="editorStore.setFillColor"
         />
       </div>
     </ScrollArea>
