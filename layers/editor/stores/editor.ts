@@ -212,6 +212,27 @@ export const useEditorStore = defineStore('editor', () => {
     return value as string
   })
 
+  function bringForward() {
+    selectedObjects.value.forEach((object) => {
+      canvas.value?.bringForward(object)
+    })
+
+    canvas.value?.renderAll()
+
+    const workspace = getWorkspace()
+    workspace?.sendToBack()
+  }
+
+  function sendBackwards() {
+    selectedObjects.value.forEach((object) => {
+      canvas.value?.sendBackwards(object)
+    })
+
+    canvas.value?.renderAll()
+    const workspace = getWorkspace()
+    workspace?.sendToBack()
+  }
+
   const getActiveStrokeColor = computed(() => {
     if (!selectedObject.value) {
       return strokeColor.value
@@ -258,6 +279,8 @@ export const useEditorStore = defineStore('editor', () => {
     addDiamond,
     changeStrokeWidth,
     changeStrokeDashArray,
+    bringForward,
+    sendBackwards,
     selectedObject,
     getActiveFillColor,
     getActiveStrokeColor,

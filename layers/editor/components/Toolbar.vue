@@ -67,6 +67,24 @@ const editorStore = useEditorStore()
           <Icon class="text-black" name="radix-icons:border-width" />
         </Button>
       </Hint>
+      <Hint label="Bring forward" side="bottom" :side-offset="5">
+        <Button
+          size="icon"
+          variant="ghost"
+          @click="editorStore.bringForward()"
+        >
+          <Icon name="lucide:arrow-up" />
+        </Button>
+      </Hint>
+      <Hint label="Send backwards" side="bottom" :side-offset="5">
+        <Button
+          size="icon"
+          variant="ghost"
+          @click="editorStore.sendBackwards()"
+        >
+          <Icon name="lucide:arrow-down" />
+        </Button>
+      </Hint>
     </div>
   </div>
 </template>
