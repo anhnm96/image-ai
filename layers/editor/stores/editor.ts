@@ -1,5 +1,5 @@
 import { fabric } from 'fabric'
-import { type ActiveTool, CIRCLE_OPTIONS, DIAMOND_OPTIONS, FILL_COLOR, RECTANGLE_OPTIONS, STROKE_COLOR, STROKE_WIDTH, TRIANGLE_OPTIONS } from '../types.js'
+import { type ActiveTool, CIRCLE_OPTIONS, DIAMOND_OPTIONS, FILL_COLOR, RECTANGLE_OPTIONS, STROKE_COLOR, STROKE_DASH_ARRAY, STROKE_WIDTH, TRIANGLE_OPTIONS } from '../types.js'
 import { isTextType } from '../utils.js'
 
 export const useEditorStore = defineStore('editor', () => {
@@ -11,6 +11,7 @@ export const useEditorStore = defineStore('editor', () => {
   const fillColor = ref(FILL_COLOR)
   const strokeColor = ref(STROKE_COLOR)
   const strokeWidth = ref(STROKE_WIDTH)
+  const strokeDashArray = ref<number[]>(STROKE_DASH_ARRAY)
 
   useAutoResize({ container, canvas })
 
@@ -181,6 +182,25 @@ export const useEditorStore = defineStore('editor', () => {
     addToCanvas(object)
   }
 
+  function changeStrokeWidth(value: number) {
+    if (!canvas.value) return
+    setStrokeWidth(value)
+    canvas.value.getActiveObjects().forEach((object) => {
+      object.set({ strokeWidth: value })
+    })
+    canvas.value.freeDrawingBrush.width = value
+    canvas.value.renderAll()
+  }
+
+  function changeStrokeDashArray(value: number[]) {
+    if (!canvas.value) return
+    strokeDashArray.value = value
+    canvas.value.getActiveObjects().forEach((object) => {
+      object.set({ strokeDashArray: value })
+    })
+    canvas.value.renderAll()
+  }
+
   const getActiveFillColor = computed(() => {
     if (!selectedObject.value) {
       return fillColor.value
@@ -216,6 +236,8 @@ export const useEditorStore = defineStore('editor', () => {
     addTriangle,
     addInverseTriangle,
     addDiamond,
+    changeStrokeWidth,
+    changeStrokeDashArray,
     selectedObject,
     getActiveFillColor,
     getActiveStrokeColor,

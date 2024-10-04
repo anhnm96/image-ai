@@ -55,6 +55,18 @@ const editorStore = useEditorStore()
           />
         </Button>
       </Hint>
+      <Hint label="Stroke width" side="bottom" :side-offset="5">
+        <Button
+          size="icon"
+          variant="ghost"
+          :class="[cn(
+            activeTool === 'stroke-width' && 'bg-gray-100',
+          )]"
+          @click="$emit('update:activeTool', 'stroke-width')"
+        >
+          <Icon name="radix-icons:border-width" />
+        </Button>
+      </Hint>
     </div>
   </div>
 </template>
