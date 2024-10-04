@@ -85,6 +85,16 @@ const editorStore = useEditorStore()
           <Icon name="lucide:arrow-down" />
         </Button>
       </Hint>
+      <Hint label="Opacity" side="bottom" :side-offset="5">
+        <Button
+          size="icon"
+          variant="ghost"
+          :class="[cn(activeTool === 'opacity' && 'bg-gray-100')]"
+          @click="$emit('update:activeTool', 'opacity')"
+        >
+          <Icon name="ph:cube-transparent" />
+        </Button>
+      </Hint>
     </div>
   </div>
 </template>

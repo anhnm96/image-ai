@@ -37,6 +37,7 @@ onMounted(async () => {
       <FillColorSidebar v-model:active-tool="activeTool" />
       <StrokeColorSidebar v-model:active-tool="activeTool" />
       <StrokeWidthSidebar v-model:active-tool="activeTool" />
+      <OpacitySidebar v-model:active-tool="activeTool" />
       <main class="bg-muted flex-1 overflow-auto relative flex flex-col">
         <Toolbar
           :key="JSON.stringify(editorStore.canvas?.getActiveObject())"

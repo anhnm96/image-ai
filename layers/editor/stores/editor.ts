@@ -233,6 +233,13 @@ export const useEditorStore = defineStore('editor', () => {
     workspace?.sendToBack()
   }
 
+  function changeOpacity(value: number) {
+    selectedObjects.value.forEach((object) => {
+      object.set({ opacity: value })
+    })
+    canvas.value?.renderAll()
+  }
+
   const getActiveStrokeColor = computed(() => {
     if (!selectedObject.value) {
       return strokeColor.value
@@ -263,6 +270,16 @@ export const useEditorStore = defineStore('editor', () => {
     return value
   })
 
+  const getActiveOpacity = computed(() => {
+    if (!selectedObject.value) {
+      return 1
+    }
+
+    const value = selectedObject.value.get('opacity') || 1
+
+    return value
+  })
+
   return {
     activeTool,
     canvas,
@@ -281,10 +298,12 @@ export const useEditorStore = defineStore('editor', () => {
     changeStrokeDashArray,
     bringForward,
     sendBackwards,
+    changeOpacity,
     selectedObject,
     getActiveFillColor,
     getActiveStrokeColor,
     getActiveStrokeWidth,
     getActiveStrokeDashArray,
+    getActiveOpacity,
   }
 })
