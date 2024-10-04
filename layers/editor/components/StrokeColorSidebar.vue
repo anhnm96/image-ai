@@ -9,24 +9,25 @@ defineEmits<{
 }>()
 
 const editorStore = useEditorStore()
+const value = computed(() => editorStore.getActiveStrokeColor)
 </script>
 
 <template>
   <aside
-    :class="cn(
+    :class="[cn(
       'bg-white relative border-r z-[40] w-[360px] h-full flex flex-col',
-      activeTool === 'fill' ? 'visible' : 'hidden',
-    )"
+      activeTool === 'stroke-color' ? 'visible' : 'hidden',
+    )]"
   >
     <ToolSidebarHeader
-      title="Fill color"
-      description="Add fill color to your element"
+      title="Stroke color"
+      description="Add stroke color to your element"
     />
     <ScrollArea>
       <div class="p-4 space-y-6">
         <ColorPicker
-          :model-value="editorStore.getActiveFillColor"
-          @update:model-value="editorStore.setFillColor"
+          :model-value="value"
+          @update:model-value="editorStore.setStrokeColor"
         />
       </div>
     </ScrollArea>

@@ -3,7 +3,8 @@ import type { ActiveTool } from '../types'
 import { fabric } from 'fabric'
 import { useEditorStore } from '../stores/editor'
 
-const activeTool = ref<ActiveTool>('select')
+const editorStore = useEditorStore()
+const { activeTool } = storeToRefs(editorStore)
 function setActiveTool(tool: ActiveTool) {
   if (tool === activeTool.value) {
     activeTool.value = 'select'
@@ -12,7 +13,6 @@ function setActiveTool(tool: ActiveTool) {
   activeTool.value = tool
 }
 
-const editorStore = useEditorStore()
 const containerEl = useTemplateRef('container')
 const canvasEl = useTemplateRef('canvas')
 
@@ -34,10 +34,8 @@ onMounted(async () => {
     <div class="absolute h-[calc(100%-68px)] w-full top-[68px] flex">
       <Sidebar :active-tool="activeTool" @update:active-tool="setActiveTool" />
       <ShapeSidebar :active-tool="activeTool" />
-      <FillColorSidebar
-        v-model:active-tool="activeTool"
-        @close="activeTool = 'select'"
-      />
+      <FillColorSidebar v-model:active-tool="activeTool" />
+      <StrokeColorSidebar v-model:active-tool="activeTool" />
       <main class="bg-muted flex-1 overflow-auto relative flex flex-col">
         <Toolbar
           :key="JSON.stringify(editorStore.canvas?.getActiveObject())"

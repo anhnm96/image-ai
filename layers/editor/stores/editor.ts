@@ -1,18 +1,20 @@
 import { fabric } from 'fabric'
-import { CIRCLE_OPTIONS, DIAMOND_OPTIONS, FILL_COLOR, RECTANGLE_OPTIONS, STROKE_COLOR, STROKE_WIDTH, TRIANGLE_OPTIONS } from '../types.js'
+import { type ActiveTool, CIRCLE_OPTIONS, DIAMOND_OPTIONS, FILL_COLOR, RECTANGLE_OPTIONS, STROKE_COLOR, STROKE_WIDTH, TRIANGLE_OPTIONS } from '../types.js'
 import { isTextType } from '../utils.js'
 
 export const useEditorStore = defineStore('editor', () => {
-  const canvas = ref<fabric.Canvas | null>(null)
+  const activeTool = shallowRef<ActiveTool>('select')
+  const canvas = shallowRef<fabric.Canvas | null>(null)
   const container = ref<HTMLDivElement | null>(null)
-  const selectedObjects = ref<fabric.Object[]>([])
+  const selectedObject = ref<fabric.Object | null>(null)
+  const selectedObjects = shallowRef<fabric.Object[]>([])
   const fillColor = ref(FILL_COLOR)
   const strokeColor = ref(STROKE_COLOR)
   const strokeWidth = ref(STROKE_WIDTH)
 
   useAutoResize({ container, canvas })
 
-  useCanvasEvents({ canvas, selectedObjects })
+  useCanvasEvents({ canvas, selectedObject, selectedObjects, activeTool })
 
   function init(containerEl: HTMLDivElement, canvasEl: fabric.Canvas) {
     fabric.Object.prototype.set({
@@ -100,7 +102,6 @@ export const useEditorStore = defineStore('editor', () => {
     canvas.value.renderAll()
   }
   function addCircle() {
-    console.log('addCircle')
     const object = new fabric.Circle({
       ...CIRCLE_OPTIONS,
       fill: fillColor.value,
@@ -181,19 +182,28 @@ export const useEditorStore = defineStore('editor', () => {
   }
 
   const getActiveFillColor = computed(() => {
-    const selectedObject = selectedObjects.value[0]
-
-    if (!selectedObject) {
+    if (!selectedObject.value) {
       return fillColor.value
     }
 
-    const value = selectedObject.get('fill') || fillColor.value
+    const value = selectedObject.value.get('fill') || fillColor.value
 
     // Currently, gradients & patterns are not supported
     return value as string
   })
 
+  const getActiveStrokeColor = computed(() => {
+    if (!selectedObject.value) {
+      return strokeColor.value
+    }
+
+    const value = selectedObject.value.get('stroke') || strokeColor.value
+
+    return value
+  })
+
   return {
+    activeTool,
     canvas,
     selectedObjects,
     init,
@@ -206,6 +216,8 @@ export const useEditorStore = defineStore('editor', () => {
     addTriangle,
     addInverseTriangle,
     addDiamond,
+    selectedObject,
     getActiveFillColor,
+    getActiveStrokeColor,
   }
 })

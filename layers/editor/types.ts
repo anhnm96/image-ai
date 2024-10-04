@@ -60,3 +60,13 @@ export const TRIANGLE_OPTIONS = {
   height: 400,
   angle: 0,
 }
+
+export const selectionDependentTools = [
+  'fill',
+  'font',
+  'filter',
+  'opacity',
+  'remove-bg',
+  'stroke-color',
+  'stroke-width',
+]

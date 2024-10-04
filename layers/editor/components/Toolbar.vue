@@ -40,6 +40,21 @@ const editorStore = useEditorStore()
           />
         </Button>
       </Hint>
+      <Hint label="Stroke color" side="bottom" :side-offset="5">
+        <Button
+          size="icon"
+          variant="ghost"
+          :class="[cn(
+            activeTool === 'stroke-color' && 'bg-gray-100',
+          )]"
+          @click="$emit('update:activeTool', 'stroke-color')"
+        >
+          <div
+            class="rounded-sm size-4 border-2 bg-white"
+            :style="{ borderColor: editorStore.getActiveStrokeColor }"
+          />
+        </Button>
+      </Hint>
     </div>
   </div>
 </template>
