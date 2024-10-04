@@ -74,6 +74,22 @@ watch(() => editorStore.selectedObject, (val) => {
           </Button>
         </Hint>
       </template>
+      <Hint v-if="isText" label="Font" side="bottom" :side-offset="5">
+        <Button
+          size="icon"
+          variant="ghost"
+          :class="cn(
+            'w-auto px-2 text-sm',
+            activeTool === 'font' && 'bg-gray-100',
+          )"
+          @click="$emit('update:activeTool', 'font')"
+        >
+          <div class="max-w-[100px] truncate">
+            {{ editorStore.getActiveFontFamily }}
+          </div>
+          <Icon class="ml-2 shrink-0" name="lucide:chevron-down" />
+        </Button>
+      </Hint>
       <Hint label="Bring forward" side="bottom" :side-offset="5">
         <Button
           size="icon"

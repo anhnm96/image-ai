@@ -1,5 +1,5 @@
 import { fabric } from 'fabric'
-import { type ActiveTool, CIRCLE_OPTIONS, DIAMOND_OPTIONS, FILL_COLOR, RECTANGLE_OPTIONS, STROKE_COLOR, STROKE_DASH_ARRAY, STROKE_WIDTH, TEXT_OPTIONS, TRIANGLE_OPTIONS } from '../types.js'
+import { type ActiveTool, CIRCLE_OPTIONS, DIAMOND_OPTIONS, FILL_COLOR, FONT_FAMILY, RECTANGLE_OPTIONS, STROKE_COLOR, STROKE_DASH_ARRAY, STROKE_WIDTH, TEXT_OPTIONS, TRIANGLE_OPTIONS } from '../types.js'
 import { isTextType } from '../utils.js'
 
 export const useEditorStore = defineStore('editor', () => {
@@ -12,6 +12,7 @@ export const useEditorStore = defineStore('editor', () => {
   const strokeColor = ref(STROKE_COLOR)
   const strokeWidth = ref(STROKE_WIDTH)
   const strokeDashArray = ref<number[]>(STROKE_DASH_ARRAY)
+  const fontFamily = ref(FONT_FAMILY)
 
   useAutoResize({ container, canvas })
 
@@ -250,6 +251,17 @@ export const useEditorStore = defineStore('editor', () => {
     addToCanvas(object)
   }
 
+  function changeFontFamily(value: string) {
+    fontFamily.value = value
+    selectedObjects.value.forEach((object) => {
+      if (isTextType(object.type)) {
+        // @ts-expect-error fontFamily exists.
+        object.set({ fontFamily: value })
+      }
+    })
+    canvas.value?.renderAll()
+  }
+
   const getActiveStrokeColor = computed(() => {
     if (!selectedObject.value) {
       return strokeColor.value
@@ -290,6 +302,17 @@ export const useEditorStore = defineStore('editor', () => {
     return value
   })
 
+  const getActiveFontFamily = computed(() => {
+    if (!selectedObject.value) {
+      return fontFamily.value
+    }
+
+    // @ts-expect-error fontFamily exists.
+    const value = selectedObject.value.get('fontFamily') || fontFamily.value
+
+    return value
+  })
+
   return {
     activeTool,
     canvas,
@@ -310,11 +333,13 @@ export const useEditorStore = defineStore('editor', () => {
     sendBackwards,
     changeOpacity,
     addText,
+    changeFontFamily,
     selectedObject,
     getActiveFillColor,
     getActiveStrokeColor,
     getActiveStrokeWidth,
     getActiveStrokeDashArray,
     getActiveOpacity,
+    getActiveFontFamily,
   }
 })
