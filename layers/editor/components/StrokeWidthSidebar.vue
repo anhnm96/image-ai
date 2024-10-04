@@ -9,7 +9,24 @@ defineEmits<{
 }>()
 
 const editorStore = useEditorStore()
-const typeValue = editorStore.selectedObject?.strokeDashArray || STROKE_DASH_ARRAY
+
+const typeValue = ref(editorStore.getActiveStrokeDashArray)
+function updateType(values: number[]) {
+  typeValue.value = values
+  editorStore.changeStrokeDashArray(values)
+}
+
+const widthValue = ref(editorStore.getActiveStrokeWidth)
+function updateWidth(values: number[] | undefined) {
+  if (!values) return
+  widthValue.value = values[0]!
+  editorStore.changeStrokeWidth(values[0]!)
+}
+
+watch(() => editorStore.selectedObject, (val) => {
+  typeValue.value = val?.strokeDashArray || STROKE_DASH_ARRAY
+  widthValue.value = val?.strokeWidth || STROKE_WIDTH
+})
 </script>
 
 <template>
@@ -26,11 +43,11 @@ const typeValue = editorStore.selectedObject?.strokeDashArray || STROKE_DASH_ARR
     <ScrollArea>
       <div class="p-4 space-y-4 border-b">
         <Label class="text-sm">
-          Stroke width
+          Stroke width {{ widthValue }} {{ typeValue }}
         </Label>
         <Slider
-          :model-value="[editorStore.selectedObject?.strokeWidth || STROKE_WIDTH]"
-          @update:model-value="(values) => editorStore.changeStrokeWidth(values[0])"
+          :model-value="[widthValue]"
+          @update:model-value="updateWidth"
         />
       </div>
       <div class="p-4 space-y-4 border-b">
@@ -40,14 +57,12 @@ const typeValue = editorStore.selectedObject?.strokeDashArray || STROKE_DASH_ARR
         <Button
           variant="secondary"
           size="lg"
-          class="cn(
-              'w-full h-16 justify-start text-left',
-              JSON.stringify(typeValue) === `[]` && 'border-2 border-blue-500'
-            )"
-          style="{
-              padding: '8px 16px'
-            }"
-          @click="editorStore.changeStrokeDashArray([])"
+          :class="cn(
+            'w-full h-16 justify-start text-left',
+            JSON.stringify(typeValue) === `[]` && 'border-2 border-blue-500',
+          )"
+          style="padding: 8px 16px"
+          @click="updateType([])"
         >
           <div class="w-full border-black rounded-full border-4" />
         </Button>
@@ -58,10 +73,8 @@ const typeValue = editorStore.selectedObject?.strokeDashArray || STROKE_DASH_ARR
             'w-full h-16 justify-start text-left',
             JSON.stringify(typeValue) === `[5,5]` && 'border-2 border-blue-500',
           )]"
-          style="{
-              padding: '8px 16px'
-            }"
-          @click="editorStore.changeStrokeType([5, 5])"
+          style="padding: 8px 16px"
+          @click="updateType([5, 5])"
         >
           <div class="w-full border-black rounded-full border-4 border-dashed" />
         </Button>

@@ -64,7 +64,7 @@ const editorStore = useEditorStore()
           )]"
           @click="$emit('update:activeTool', 'stroke-width')"
         >
-          <Icon name="radix-icons:border-width" />
+          <Icon class="text-black" name="radix-icons:border-width" />
         </Button>
       </Hint>
     </div>

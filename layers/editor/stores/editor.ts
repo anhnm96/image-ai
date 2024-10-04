@@ -222,6 +222,26 @@ export const useEditorStore = defineStore('editor', () => {
     return value
   })
 
+  const getActiveStrokeWidth = computed(() => {
+    if (!selectedObject.value) {
+      return strokeWidth.value
+    }
+
+    const value = selectedObject.value.get('strokeWidth') || strokeWidth.value
+
+    return value
+  })
+
+  const getActiveStrokeDashArray = computed(() => {
+    if (!selectedObject.value) {
+      return strokeDashArray.value
+    }
+
+    const value = selectedObject.value.get('strokeDashArray') || strokeDashArray.value
+
+    return value
+  })
+
   return {
     activeTool,
     canvas,
@@ -241,5 +261,7 @@ export const useEditorStore = defineStore('editor', () => {
     selectedObject,
     getActiveFillColor,
     getActiveStrokeColor,
+    getActiveStrokeWidth,
+    getActiveStrokeDashArray,
   }
 })
