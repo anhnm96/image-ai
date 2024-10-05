@@ -271,6 +271,15 @@ watch(() => editorStore.selectedObject, (val) => {
           <Icon name="ph:cube-transparent" />
         </Button>
       </Hint>
+      <Hint label="Delete" side="bottom" :side-offset="5">
+        <Button
+          size="icon"
+          variant="ghost"
+          @click="editorStore.deleteSelected"
+        >
+          <Icon name="ph:trash" />
+        </Button>
+      </Hint>
     </div>
   </div>
 </template>

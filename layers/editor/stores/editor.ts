@@ -322,6 +322,12 @@ export const useEditorStore = defineStore('editor', () => {
     canvas.value?.renderAll()
   }
 
+  function deleteSelected() {
+    selectedObjects.value.forEach(object => canvas.value?.remove(object))
+    canvas.value?.discardActiveObject()
+    canvas.value?.renderAll()
+  }
+
   const getActiveStrokeColor = computed(() => {
     if (!selectedObject.value) {
       return strokeColor.value
@@ -466,6 +472,7 @@ export const useEditorStore = defineStore('editor', () => {
     changeFontLinethrough,
     changeTextAlign,
     changeFontSize,
+    deleteSelected,
     selectedObject,
     getActiveFillColor,
     getActiveStrokeColor,
