@@ -13,7 +13,7 @@ export default defineNuxtConfig({
   },
   extends: ['./layers/editor'],
   css: ['~/assets/main.css'],
-  modules: ['@vueuse/nuxt', '@nuxt/icon', '@pinia/nuxt'],
+  modules: ['@vueuse/nuxt', '@nuxt/icon', '@pinia/nuxt', '@uploadthing/nuxt'],
   shadcn: {
     /**
      * Prefix for all the imported component
@@ -53,5 +53,10 @@ export default defineNuxtConfig({
   },
   runtimeConfig: {
     unsplashAccessKey: '',
+    uploadthingToken: '',
+  },
+  uploadthing: {
+    routerPath: './server/uploadthing.ts',
+    logLevel: 'Info',
   },
 })

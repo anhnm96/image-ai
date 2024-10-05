@@ -10,6 +10,24 @@ defineEmits<{
 
 const editorStore = useEditorStore()
 const { data, isLoading, isError } = useGetImages()
+
+const { startUpload } = useUploadThing('imageUploader', {
+  onClientUploadComplete(res) {
+    console.log(`onClientUploadComplete`, res)
+    editorStore.addImage(res[0].url)
+  },
+})
+
+async function handleChange(e) {
+  console.log(`e`, e)
+  const file = (e.target as HTMLInputElement).files?.[0]
+  if (!file) return
+
+  // Do something with files
+
+  // Then start the upload
+  await startUpload([file])
+}
 </script>
 
 <template>
@@ -24,19 +42,10 @@ const { data, isLoading, isError } = useGetImages()
       description="Add images to your canvas"
     />
     <div class="p-4 border-b">
-      <!-- <UploadButton
-          appearance={{
-            button: "w-full text-sm font-medium",
-            allowedContent: "hidden"
-          }}
-          content={{
-            button: "Upload Image"
-          }}
-          endpoint="imageUploader"
-          onClientUploadComplete={(res) => {
-            editor?.addImage(res[0].url);
-          }}
-        /> -->
+      <input
+        type="file"
+        @change="handleChange"
+      >
     </div>
     <div v-if="isLoading" class="flex items-center justify-center flex-1">
       <Icon class="size-4 text-muted-foreground animate-spin" name="lucide:loader" />

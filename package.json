@@ -16,6 +16,7 @@
     "@ckpack/vue-color": "^1.6.0",
     "@pinia/nuxt": "^0.5.5",
     "@tanstack/vue-query": "^5.59.1",
+    "@uploadthing/nuxt": "^7.0.2",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.1",
     "fabric": "5.3.0-browser",
@@ -27,6 +28,7 @@
     "tailwind-merge": "^2.5.2",
     "tailwindcss-animate": "^1.0.7",
     "unsplash-js": "^7.0.19",
+    "uploadthing": "^7.0.2",
     "vue": "latest",
     "vue-router": "latest"
   },
