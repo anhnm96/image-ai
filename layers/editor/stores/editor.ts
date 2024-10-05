@@ -1,5 +1,5 @@
 import { fabric } from 'fabric'
-import { type ActiveTool, CIRCLE_OPTIONS, DIAMOND_OPTIONS, FILL_COLOR, FONT_FAMILY, FONT_WEIGHT, RECTANGLE_OPTIONS, STROKE_COLOR, STROKE_DASH_ARRAY, STROKE_WIDTH, TEXT_OPTIONS, TRIANGLE_OPTIONS } from '../types.js'
+import { type ActiveTool, CIRCLE_OPTIONS, DIAMOND_OPTIONS, FILL_COLOR, FONT_FAMILY, FONT_SIZE, FONT_WEIGHT, RECTANGLE_OPTIONS, STROKE_COLOR, STROKE_DASH_ARRAY, STROKE_WIDTH, TEXT_OPTIONS, TRIANGLE_OPTIONS } from '../types.js'
 import { isTextType } from '../utils.js'
 
 export const useEditorStore = defineStore('editor', () => {
@@ -312,6 +312,16 @@ export const useEditorStore = defineStore('editor', () => {
     canvas.value?.renderAll()
   }
 
+  function changeFontSize(value: number) {
+    selectedObjects.value.forEach((object) => {
+      if (isTextType(object.type)) {
+        // @ts-expect-error type
+        object.set({ fontSize: value })
+      }
+    })
+    canvas.value?.renderAll()
+  }
+
   const getActiveStrokeColor = computed(() => {
     if (!selectedObject.value) {
       return strokeColor.value
@@ -418,6 +428,17 @@ export const useEditorStore = defineStore('editor', () => {
     return value
   })
 
+  const getActiveFontSize = computed(() => {
+    if (!selectedObject.value) {
+      return FONT_SIZE
+    }
+
+    // @ts-expect-error type
+    const value = selectedObject.value.get('fontSize') || FONT_SIZE
+
+    return value
+  })
+
   return {
     activeTool,
     canvas,
@@ -444,6 +465,7 @@ export const useEditorStore = defineStore('editor', () => {
     changeFontUnderline,
     changeFontLinethrough,
     changeTextAlign,
+    changeFontSize,
     selectedObject,
     getActiveFillColor,
     getActiveStrokeColor,
@@ -456,5 +478,6 @@ export const useEditorStore = defineStore('editor', () => {
     getActiveFontUnderline,
     getActiveFontLinethrough,
     getActiveTextAlign,
+    getActiveFontSize,
   }
 })

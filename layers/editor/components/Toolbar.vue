@@ -60,6 +60,14 @@ function changeTextAlign(value: string) {
   textAlign.value = value
 }
 
+const fontSize = ref(editorStore.getActiveFontSize)
+function changeFontSize(value: number) {
+  if (!editorStore.selectedObject) return
+
+  editorStore.changeFontSize(value)
+  fontSize.value = value
+}
+
 watch(() => editorStore.selectedObject, (val) => {
   isText.value = isTextType(val?.type || '')
   if (isText.value) {
@@ -68,6 +76,7 @@ watch(() => editorStore.selectedObject, (val) => {
     fontUnderline.value = editorStore.getActiveFontUnderline
     fontLinethrough.value = editorStore.getActiveFontLinethrough
     textAlign.value = editorStore.getActiveTextAlign
+    fontSize.value = editorStore.getActiveFontSize
   }
 })
 // const properties = reactive({
@@ -230,6 +239,10 @@ watch(() => editorStore.selectedObject, (val) => {
           <Icon name="lucide:align-right" />
         </Button>
       </Hint>
+      <FontSizeInput
+        v-if="isText"
+        :model-value="fontSize" @update:model-value="changeFontSize"
+      />
       <Hint label="Bring forward" side="bottom" :side-offset="5">
         <Button
           size="icon"
