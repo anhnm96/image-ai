@@ -1,7 +1,7 @@
 <script lang="ts" setup>
-import type { ActiveTool } from '../types'
 import { cn } from '~/lib/utils'
 import { useEditorStore } from '../stores/editor'
+import { type ActiveTool, FONT_WEIGHT } from '../types'
 import { isTextType } from '../utils'
 
 defineProps<{ activeTool: ActiveTool }>()
@@ -11,8 +11,64 @@ defineEmits<{
 
 const editorStore = useEditorStore()
 const isText = ref(isTextType(editorStore.selectedObject?.type || ''))
+// @ts-expect-error type
+const fontWeight = ref(editorStore.selectedObject?.get('fontWeight') || FONT_WEIGHT)
+function toggleBold() {
+  if (!editorStore.selectedObject) return
+  // @ts-expect-error type
+  const newVal = editorStore.selectedObject.get('fontWeight') > 500 ? 500 : 700
+  editorStore.changeFontWeight(newVal)
+  fontWeight.value = newVal
+}
+
+const fontStyle = ref(editorStore.getActiveFontStyle)
+function toggleItalic() {
+  if (!editorStore.selectedObject) return
+
+  const isItalic = fontStyle.value === 'italic'
+  const newValue = isItalic ? 'normal' : 'italic'
+
+  editorStore.changeFontStyle(newValue)
+  fontStyle.value = newValue
+}
+
+const fontUnderline = ref(editorStore.getActiveFontUnderline)
+function toggleUnderline() {
+  if (!editorStore.selectedObject) return
+
+  const newValue = !fontUnderline.value
+
+  editorStore.changeFontUnderline(newValue)
+  fontUnderline.value = newValue
+}
+
+const fontLinethrough = ref(editorStore.getActiveFontLinethrough)
+function toggleLinethrough() {
+  if (!editorStore.selectedObject) return
+
+  const newValue = !fontLinethrough.value
+
+  editorStore.changeFontLinethrough(newValue)
+  fontLinethrough.value = newValue
+}
+
+const textAlign = ref(editorStore.getActiveTextAlign)
+function changeTextAlign(value: string) {
+  if (!editorStore.selectedObject) return
+
+  editorStore.changeTextAlign(value)
+  textAlign.value = value
+}
+
 watch(() => editorStore.selectedObject, (val) => {
   isText.value = isTextType(val?.type || '')
+  if (isText.value) {
+    fontWeight.value = editorStore.getActiveFontWeight
+    fontStyle.value = editorStore.getActiveFontStyle
+    fontUnderline.value = editorStore.getActiveFontUnderline
+    fontLinethrough.value = editorStore.getActiveFontLinethrough
+    textAlign.value = editorStore.getActiveTextAlign
+  }
 })
 // const properties = reactive({
 // fillColor: editorStore.getActiveFillColor,
@@ -88,6 +144,90 @@ watch(() => editorStore.selectedObject, (val) => {
             {{ editorStore.getActiveFontFamily }}
           </div>
           <Icon class="ml-2 shrink-0" name="lucide:chevron-down" />
+        </Button>
+      </Hint>
+      <Hint v-if="isText" label="Bold" side="bottom" :side-offset="5">
+        <Button
+          size="icon"
+          variant="ghost"
+          :class="cn(
+            fontWeight > 500 && 'bg-gray-100',
+          )"
+          @click="toggleBold"
+        >
+          <Icon name="lucide:bold" />
+        </Button>
+      </Hint>
+      <Hint v-if="isText" label="Italic" side="bottom" :side-offset="5">
+        <Button
+          size="icon"
+          variant="ghost"
+          :class="cn(
+            fontStyle === 'italic' && 'bg-gray-100',
+          )"
+          @click="toggleItalic"
+        >
+          <Icon name="lucide:italic" />
+        </Button>
+      </Hint>
+      <Hint v-if="isText" label="Italic" side="bottom" :side-offset="5">
+        <Button
+          size="icon"
+          variant="ghost"
+          :class="cn(
+            fontUnderline && 'bg-gray-100',
+          )"
+          @click="toggleUnderline"
+        >
+          <Icon name="lucide:underline" />
+        </Button>
+      </Hint>
+      <Hint v-if="isText" label="Italic" side="bottom" :side-offset="5">
+        <Button
+          size="icon"
+          variant="ghost"
+          :class="cn(
+            fontLinethrough && 'bg-gray-100',
+          )"
+          @click="toggleLinethrough"
+        >
+          <Icon name="lucide:strikethrough" />
+        </Button>
+      </Hint>
+      <Hint v-if="isText" label="Align left" side="bottom" :side-offset="5">
+        <Button
+          size="icon"
+          variant="ghost"
+          :class="cn(
+            textAlign === 'left' && 'bg-gray-100',
+          )"
+          @click="changeTextAlign('left')"
+        >
+          <Icon name="lucide:align-left" />
+        </Button>
+      </Hint>
+      <Hint v-if="isText" label="Align center" side="bottom" :side-offset="5">
+        <Button
+          size="icon"
+          variant="ghost"
+          :class="cn(
+            textAlign === 'center' && 'bg-gray-100',
+          )"
+          @click="changeTextAlign('center')"
+        >
+          <Icon name="lucide:align-center" />
+        </Button>
+      </Hint>
+      <Hint v-if="isText" label="Align right" side="bottom" :side-offset="5">
+        <Button
+          size="icon"
+          variant="ghost"
+          :class="cn(
+            textAlign === 'right' && 'bg-gray-100',
+          )"
+          @click="changeTextAlign('right')"
+        >
+          <Icon name="lucide:align-right" />
         </Button>
       </Hint>
       <Hint label="Bring forward" side="bottom" :side-offset="5">

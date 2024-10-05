@@ -1,5 +1,5 @@
 import { fabric } from 'fabric'
-import { type ActiveTool, CIRCLE_OPTIONS, DIAMOND_OPTIONS, FILL_COLOR, FONT_FAMILY, RECTANGLE_OPTIONS, STROKE_COLOR, STROKE_DASH_ARRAY, STROKE_WIDTH, TEXT_OPTIONS, TRIANGLE_OPTIONS } from '../types.js'
+import { type ActiveTool, CIRCLE_OPTIONS, DIAMOND_OPTIONS, FILL_COLOR, FONT_FAMILY, FONT_WEIGHT, RECTANGLE_OPTIONS, STROKE_COLOR, STROKE_DASH_ARRAY, STROKE_WIDTH, TEXT_OPTIONS, TRIANGLE_OPTIONS } from '../types.js'
 import { isTextType } from '../utils.js'
 
 export const useEditorStore = defineStore('editor', () => {
@@ -262,6 +262,56 @@ export const useEditorStore = defineStore('editor', () => {
     canvas.value?.renderAll()
   }
 
+  function changeFontWeight(value: number) {
+    canvas.value?.getActiveObjects().forEach((object) => {
+      if (isTextType(object.type)) {
+        // @ts-expect-error type
+        object.set({ fontWeight: value })
+      }
+    })
+    canvas.value?.renderAll()
+  }
+
+  function changeFontStyle(value: string) {
+    selectedObjects.value.forEach((object) => {
+      if (isTextType(object.type)) {
+        // @ts-expect-error type
+        object.set({ fontStyle: value })
+      }
+    })
+    canvas.value?.renderAll()
+  }
+
+  function changeFontUnderline(value: boolean) {
+    selectedObjects.value.forEach((object) => {
+      if (isTextType(object.type)) {
+        // @ts-expect-error type
+        object.set({ underline: value })
+      }
+    })
+    canvas.value?.renderAll()
+  }
+
+  function changeFontLinethrough(value: boolean) {
+    selectedObjects.value.forEach((object) => {
+      if (isTextType(object.type)) {
+        // @ts-expect-error type
+        object.set({ linethrough: value })
+      }
+    })
+    canvas.value?.renderAll()
+  }
+
+  function changeTextAlign(value: string) {
+    selectedObjects.value.forEach((object) => {
+      if (isTextType(object.type)) {
+        // @ts-expect-error type
+        object.set({ textAlign: value })
+      }
+    })
+    canvas.value?.renderAll()
+  }
+
   const getActiveStrokeColor = computed(() => {
     if (!selectedObject.value) {
       return strokeColor.value
@@ -313,6 +363,61 @@ export const useEditorStore = defineStore('editor', () => {
     return value
   })
 
+  const getActiveFontWeight = computed(() => {
+    if (!selectedObject.value) {
+      return FONT_WEIGHT
+    }
+
+    // @ts-expect-error type
+    const value = selectedObject.value.get('fontWeight') || FONT_WEIGHT
+
+    return value
+  })
+
+  const getActiveFontStyle = computed(() => {
+    if (!selectedObject.value) {
+      return 'normal'
+    }
+
+    // @ts-expect-error type
+    const value = selectedObject.value.get('fontStyle') || 'normal'
+
+    return value
+  })
+
+  const getActiveFontUnderline = computed(() => {
+    if (!selectedObject.value) {
+      return false
+    }
+
+    // @ts-expect-error type
+    const value = selectedObject.value.get('underline') || false
+
+    return value
+  })
+
+  const getActiveFontLinethrough = computed(() => {
+    if (!selectedObject.value) {
+      return false
+    }
+
+    // @ts-expect-error type
+    const value = selectedObject.value.get('linethrough') || false
+
+    return value
+  })
+
+  const getActiveTextAlign = computed(() => {
+    if (!selectedObject.value) {
+      return 'left'
+    }
+
+    // @ts-expect-error type
+    const value = selectedObject.value.get('textAlign') || 'left'
+
+    return value
+  })
+
   return {
     activeTool,
     canvas,
@@ -334,6 +439,11 @@ export const useEditorStore = defineStore('editor', () => {
     changeOpacity,
     addText,
     changeFontFamily,
+    changeFontWeight,
+    changeFontStyle,
+    changeFontUnderline,
+    changeFontLinethrough,
+    changeTextAlign,
     selectedObject,
     getActiveFillColor,
     getActiveStrokeColor,
@@ -341,5 +451,10 @@ export const useEditorStore = defineStore('editor', () => {
     getActiveStrokeDashArray,
     getActiveOpacity,
     getActiveFontFamily,
+    getActiveFontWeight,
+    getActiveFontStyle,
+    getActiveFontUnderline,
+    getActiveFontLinethrough,
+    getActiveTextAlign,
   }
 })
