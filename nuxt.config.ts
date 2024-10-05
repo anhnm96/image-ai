@@ -30,6 +30,14 @@ export default defineNuxtConfig({
       scan: true,
     },
   },
+  imports: {
+    presets: [
+      {
+        from: '@tanstack/vue-query',
+        imports: ['useQuery', 'useQueries', 'useInfiniteQuery', 'useMutation', 'useQueryClient', 'useIsFetching'],
+      },
+    ],
+  },
   components: {
     dirs: [
       {
@@ -42,5 +50,8 @@ export default defineNuxtConfig({
         extensions: ['vue'],
       },
     ],
+  },
+  runtimeConfig: {
+    unsplashAccessKey: '',
   },
 })

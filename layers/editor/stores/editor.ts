@@ -328,6 +328,23 @@ export const useEditorStore = defineStore('editor', () => {
     canvas.value?.renderAll()
   }
 
+  function addImage(value: string) {
+    fabric.Image.fromURL(
+      value,
+      (image) => {
+        const workspace = getWorkspace()
+
+        image.scaleToWidth(workspace?.width || 0)
+        image.scaleToHeight(workspace?.height || 0)
+
+        addToCanvas(image)
+      },
+      {
+        crossOrigin: 'anonymous',
+      },
+    )
+  }
+
   const getActiveStrokeColor = computed(() => {
     if (!selectedObject.value) {
       return strokeColor.value
@@ -473,6 +490,7 @@ export const useEditorStore = defineStore('editor', () => {
     changeTextAlign,
     changeFontSize,
     deleteSelected,
+    addImage,
     selectedObject,
     getActiveFillColor,
     getActiveStrokeColor,
