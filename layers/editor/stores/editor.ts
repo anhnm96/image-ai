@@ -1,6 +1,6 @@
 import { fabric } from 'fabric'
 import { type ActiveTool, CIRCLE_OPTIONS, DIAMOND_OPTIONS, FILL_COLOR, FONT_FAMILY, FONT_SIZE, FONT_WEIGHT, RECTANGLE_OPTIONS, STROKE_COLOR, STROKE_DASH_ARRAY, STROKE_WIDTH, TEXT_OPTIONS, TRIANGLE_OPTIONS } from '../types.js'
-import { isTextType } from '../utils.js'
+import { createFilter, isTextType } from '../utils.js'
 
 export const useEditorStore = defineStore('editor', () => {
   const activeTool = shallowRef<ActiveTool>('select')
@@ -345,6 +345,20 @@ export const useEditorStore = defineStore('editor', () => {
     )
   }
 
+  function changeImageFilter(value: string) {
+    selectedObjects.value.forEach((object) => {
+      if (object.type === 'image') {
+        const imageObject = object as fabric.Image
+
+        const effect = createFilter(value)
+
+        imageObject.filters = effect ? [effect] : []
+        imageObject.applyFilters()
+        canvas.value?.renderAll()
+      }
+    })
+  }
+
   const getActiveStrokeColor = computed(() => {
     if (!selectedObject.value) {
       return strokeColor.value
@@ -491,6 +505,7 @@ export const useEditorStore = defineStore('editor', () => {
     changeFontSize,
     deleteSelected,
     addImage,
+    changeImageFilter,
     selectedObject,
     getActiveFillColor,
     getActiveStrokeColor,

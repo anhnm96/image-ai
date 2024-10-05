@@ -11,6 +11,7 @@ defineEmits<{
 
 const editorStore = useEditorStore()
 const isText = ref(isTextType(editorStore.selectedObject?.type || ''))
+const isImage = ref(editorStore.selectedObject?.type === 'image')
 // @ts-expect-error type
 const fontWeight = ref(editorStore.selectedObject?.get('fontWeight') || FONT_WEIGHT)
 function toggleBold() {
@@ -70,6 +71,7 @@ function changeFontSize(value: number) {
 
 watch(() => editorStore.selectedObject, (val) => {
   isText.value = isTextType(val?.type || '')
+  isImage.value = val?.type === 'image'
   if (isText.value) {
     fontWeight.value = editorStore.getActiveFontWeight
     fontStyle.value = editorStore.getActiveFontStyle
@@ -95,7 +97,7 @@ watch(() => editorStore.selectedObject, (val) => {
 <template>
   <div class="shrink-0 h-[56px] border-b bg-white w-full flex items-center overflow-x-auto z-[49] p-2 gap-x-2">
     <div v-if="editorStore.selectedObjects.length" class="flex items-center h-full justify-center">
-      <Hint label="Color" side="bottom" :side-offset="5">
+      <Hint v-if="!isImage" label="Color" side="bottom" :side-offset="5">
         <Button
           size="icon"
           variant="ghost"
@@ -243,6 +245,18 @@ watch(() => editorStore.selectedObject, (val) => {
         v-if="isText"
         :model-value="fontSize" @update:model-value="changeFontSize"
       />
+      <Hint v-if="isImage" label="Filters" side="bottom" :side-offset="5">
+        <Button
+          size="icon"
+          variant="ghost"
+          :class="cn(
+            activeTool === 'filter' && 'bg-gray-100',
+          )"
+          @click="$emit('update:activeTool', 'filter')"
+        >
+          <Icon name="mingcute:color-filter-line" />
+        </Button>
+      </Hint>
       <Hint label="Bring forward" side="bottom" :side-offset="5">
         <Button
           size="icon"
