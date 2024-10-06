@@ -558,6 +558,27 @@ export const useEditorStore = defineStore('editor', () => {
     changeSize,
     changeBackground,
     getWorkspace,
+    zoomIn: () => {
+      if (!canvas.value) return
+      let zoomRatio = canvas.value.getZoom()
+      zoomRatio += 0.05
+      const center = canvas.value.getCenter()
+      canvas.value.zoomToPoint(
+        new fabric.Point(center.left, center.top),
+        zoomRatio > 1 ? 1 : zoomRatio,
+      )
+    },
+    zoomOut: () => {
+      if (!canvas.value) return
+      let zoomRatio = canvas.value.getZoom()
+      zoomRatio -= 0.05
+      const center = canvas.value.getCenter()
+      canvas.value.zoomToPoint(
+        new fabric.Point(center.left, center.top),
+        zoomRatio < 0.2 ? 0.2 : zoomRatio,
+      )
+    },
+    autoZoom,
     selectedObject,
     getActiveFillColor,
     getActiveStrokeColor,
