@@ -6,6 +6,14 @@ import { useEditorStore } from '../stores/editor'
 const editorStore = useEditorStore()
 const { activeTool } = storeToRefs(editorStore)
 function setActiveTool(tool: ActiveTool) {
+  if (tool === 'draw') {
+    editorStore.enableDrawingMode()
+  }
+
+  if (activeTool.value === 'draw') {
+    editorStore.disableDrawingMode()
+  }
+
   if (tool === activeTool.value) {
     activeTool.value = 'select'
     return
@@ -42,6 +50,7 @@ onMounted(async () => {
       <FontSidebar v-model:active-tool="activeTool" />
       <ImageSidebar v-model:active-tool="activeTool" />
       <FilterSidebar v-model:active-tool="activeTool" />
+      <DrawSidebar v-model:active-tool="activeTool" />
       <main class="bg-muted flex-1 overflow-auto relative flex flex-col">
         <Toolbar
           :key="JSON.stringify(editorStore.canvas?.getActiveObject())"

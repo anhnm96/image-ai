@@ -43,7 +43,7 @@ watch(() => editorStore.selectedObject, (val) => {
     <ScrollArea>
       <div class="p-4 space-y-4 border-b">
         <Label class="text-sm">
-          Stroke width {{ widthValue }} {{ typeValue }}
+          Stroke width
         </Label>
         <Slider
           :model-value="[widthValue]"

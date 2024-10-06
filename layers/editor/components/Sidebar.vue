@@ -41,12 +41,6 @@ defineEmits<{
         @click="$emit('update:activeTool', 'draw')"
       />
       <SidebarItem
-        icon="lucide:wand-sparkles"
-        label="AI"
-        :is-active="activeTool === 'ai'"
-        @click="$emit('update:activeTool', 'ai')"
-      />
-      <SidebarItem
         icon="lucide:settings"
         label="Settings"
         :is-active="activeTool === 'settings'"

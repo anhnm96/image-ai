@@ -186,8 +186,8 @@ export const useEditorStore = defineStore('editor', () => {
   }
 
   function changeStrokeWidth(value: number) {
-    if (!canvas.value) return
     setStrokeWidth(value)
+    if (!canvas.value) return
     canvas.value.getActiveObjects().forEach((object) => {
       object.set({ strokeWidth: value })
     })
@@ -361,6 +361,35 @@ export const useEditorStore = defineStore('editor', () => {
     })
   }
 
+  function enableDrawingMode() {
+    if (!canvas.value) return
+    canvas.value.discardActiveObject()
+    canvas.value.renderAll()
+    canvas.value.isDrawingMode = true
+    canvas.value.freeDrawingBrush.width = strokeWidth.value
+    canvas.value.freeDrawingBrush.color = strokeColor.value
+  }
+  function disableDrawingMode() {
+    if (!canvas.value) return
+    canvas.value.isDrawingMode = false
+  }
+
+  function changeStrokeColor(value: string) {
+    strokeColor.value = value
+    selectedObjects.value.forEach((object) => {
+      // Text types don't have stroke
+      if (isTextType(object.type)) {
+        object.set({ fill: value })
+        return
+      }
+
+      object.set({ stroke: value })
+    })
+    if (!canvas.value) return
+    canvas.value.freeDrawingBrush.color = value
+    canvas.value.renderAll()
+  }
+
   const getActiveStrokeColor = computed(() => {
     if (!selectedObject.value) {
       return strokeColor.value
@@ -510,6 +539,9 @@ export const useEditorStore = defineStore('editor', () => {
     changeImageFilter,
     copy,
     paste,
+    enableDrawingMode,
+    disableDrawingMode,
+    changeStrokeColor,
     selectedObject,
     getActiveFillColor,
     getActiveStrokeColor,
