@@ -18,6 +18,8 @@ export const useEditorStore = defineStore('editor', () => {
 
   useCanvasEvents({ canvas, selectedObject, selectedObjects, activeTool })
 
+  const { copy, paste } = useCloneCanvas({ canvas })
+
   function init(containerEl: HTMLDivElement, canvasEl: fabric.Canvas) {
     fabric.Object.prototype.set({
       cornerColor: '#FFF',
@@ -506,6 +508,8 @@ export const useEditorStore = defineStore('editor', () => {
     deleteSelected,
     addImage,
     changeImageFilter,
+    copy,
+    paste,
     selectedObject,
     getActiveFillColor,
     getActiveStrokeColor,

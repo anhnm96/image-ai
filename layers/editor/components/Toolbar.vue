@@ -285,6 +285,18 @@ watch(() => editorStore.selectedObject, (val) => {
           <Icon name="ph:cube-transparent" />
         </Button>
       </Hint>
+      <Hint label="Duplicate" side="bottom" :side-offset="5">
+        <Button
+          size="icon"
+          variant="ghost"
+          @click="() => {
+            editorStore.copy()
+            editorStore.paste()
+          }"
+        >
+          <Icon name="ph:copy" />
+        </Button>
+      </Hint>
       <Hint label="Delete" side="bottom" :side-offset="5">
         <Button
           size="icon"
