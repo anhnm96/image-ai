@@ -14,7 +14,7 @@ export const useEditorStore = defineStore('editor', () => {
   const strokeDashArray = ref<number[]>(STROKE_DASH_ARRAY)
   const fontFamily = ref(FONT_FAMILY)
 
-  useAutoResize({ container, canvas })
+  const { autoZoom } = useAutoResize({ container, canvas })
 
   useCanvasEvents({ canvas, selectedObject, selectedObjects, activeTool })
 
@@ -390,6 +390,19 @@ export const useEditorStore = defineStore('editor', () => {
     canvas.value.renderAll()
   }
 
+  function changeSize(value: { width: number, height: number }) {
+    const workspace = getWorkspace()
+
+    workspace?.set(value)
+    autoZoom()
+  }
+
+  function changeBackground(value: string) {
+    const workspace = getWorkspace()
+    workspace?.set({ fill: value })
+    canvas.value?.renderAll()
+  }
+
   const getActiveStrokeColor = computed(() => {
     if (!selectedObject.value) {
       return strokeColor.value
@@ -542,6 +555,9 @@ export const useEditorStore = defineStore('editor', () => {
     enableDrawingMode,
     disableDrawingMode,
     changeStrokeColor,
+    changeSize,
+    changeBackground,
+    getWorkspace,
     selectedObject,
     getActiveFillColor,
     getActiveStrokeColor,

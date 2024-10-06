@@ -57,4 +57,6 @@ export function useAutoResize({ canvas, container }: UseAutoResizeProps) {
   onBeforeUnmount(() => {
     resizeObserver?.disconnect()
   })
+
+  return { autoZoom }
 }
