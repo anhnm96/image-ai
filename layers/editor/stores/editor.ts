@@ -32,6 +32,8 @@ export const useEditorStore = defineStore('editor', () => {
 
   const { copy, paste } = useCloneCanvas({ canvas })
 
+  useHotkeys({ undo, redo, copy, paste, save, canvas })
+
   function init(containerEl: HTMLDivElement, canvasEl: fabric.Canvas) {
     fabric.Object.prototype.set({
       cornerColor: '#FFF',
