@@ -1,6 +1,6 @@
 import { fabric } from 'fabric'
 import { type ActiveTool, CIRCLE_OPTIONS, DIAMOND_OPTIONS, FILL_COLOR, FONT_FAMILY, FONT_SIZE, FONT_WEIGHT, JSON_KEYS, RECTANGLE_OPTIONS, STROKE_COLOR, STROKE_DASH_ARRAY, STROKE_WIDTH, TEXT_OPTIONS, TRIANGLE_OPTIONS } from '../types.js'
-import { createFilter, isTextType } from '../utils.js'
+import { createFilter, downloadFile, isTextType } from '../utils.js'
 
 export const useEditorStore = defineStore('editor', () => {
   const activeTool = shallowRef<ActiveTool>('select')
@@ -13,6 +13,10 @@ export const useEditorStore = defineStore('editor', () => {
   const strokeWidth = ref(STROKE_WIDTH)
   const strokeDashArray = ref<number[]>(STROKE_DASH_ARRAY)
   const fontFamily = ref(FONT_FAMILY)
+
+  useEventListener('beforeunload', (event) => {
+    (event || window.event).returnValue = 'Are you sure you want to leave?'
+  })
 
   const { autoZoom } = useAutoResize({ container, canvas })
 
@@ -33,6 +37,71 @@ export const useEditorStore = defineStore('editor', () => {
   const { copy, paste } = useCloneCanvas({ canvas })
 
   useHotkeys({ undo, redo, copy, paste, save, canvas })
+
+  function generateSaveOptions() {
+    const { width, height, left, top } = getWorkspace() as fabric.Rect
+
+    return {
+      name: 'Image',
+      format: 'png',
+      quality: 1,
+      width,
+      height,
+      left,
+      top,
+    }
+  }
+
+  function savePng() {
+    if (!canvas.value) return
+    const options = generateSaveOptions()
+
+    canvas.value?.setViewportTransform([1, 0, 0, 1, 0, 0])
+    const dataUrl = canvas.value.toDataURL(options)
+
+    downloadFile(dataUrl, 'png')
+    autoZoom()
+  }
+
+  function saveSvg() {
+    if (!canvas.value) return
+    const options = generateSaveOptions()
+
+    canvas.value?.setViewportTransform([1, 0, 0, 1, 0, 0])
+    const dataUrl = canvas.value.toDataURL(options)
+
+    downloadFile(dataUrl, 'svg')
+    autoZoom()
+  }
+
+  function saveJpg() {
+    if (!canvas.value) return
+    const options = generateSaveOptions()
+
+    canvas.value?.setViewportTransform([1, 0, 0, 1, 0, 0])
+    const dataUrl = canvas.value.toDataURL(options)
+
+    downloadFile(dataUrl, 'jpg')
+    autoZoom()
+  };
+
+  function saveJson() {
+    if (!canvas.value) return
+    const dataUrl = canvas.value.toJSON(JSON_KEYS)
+
+    const fileString = `data:text/json;charset=utf-8,${encodeURIComponent(
+      JSON.stringify(dataUrl, null, '\t'),
+    )}`
+    downloadFile(fileString, 'json')
+  }
+
+  function loadJson(json: string) {
+    const data = JSON.parse(json)
+
+    canvas.value?.loadFromJSON(data, () => {
+      autoZoom()
+    })
+  };
 
   function init(containerEl: HTMLDivElement, canvasEl: fabric.Canvas) {
     fabric.Object.prototype.set({
@@ -597,6 +666,11 @@ export const useEditorStore = defineStore('editor', () => {
         zoomRatio < 0.2 ? 0.2 : zoomRatio,
       )
     },
+    savePng,
+    saveSvg,
+    saveJpg,
+    saveJson,
+    loadJson,
     autoZoom,
     canRedo,
     canUndo,

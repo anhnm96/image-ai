@@ -38,7 +38,7 @@ onMounted(async () => {
 
 <template>
   <div class="h-full flex flex-col">
-    <Navbar v-model:active-tool="activeTool" />
+    <Navbar :active-tool="activeTool" @update:active-tool="setActiveTool" />
     <div class="absolute h-[calc(100%-68px)] w-full top-[68px] flex">
       <Sidebar :active-tool="activeTool" @update:active-tool="setActiveTool" />
       <ShapeSidebar :active-tool="activeTool" />

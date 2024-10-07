@@ -18,6 +18,7 @@ export function useAutoResize({ canvas, container }: UseAutoResizeProps) {
     const center = canvas.value.getCenter()
     const zoomRatio = 0.85
     const localWorkspace = canvas.value.getObjects().find(obj => obj.name === 'clip')
+    if (!localWorkspace) return
     // @ts-expect-error type
     const scale = fabric.util.findScaleToFit(localWorkspace, {
       width,
@@ -27,7 +28,6 @@ export function useAutoResize({ canvas, container }: UseAutoResizeProps) {
 
     canvas.value.setViewportTransform(fabric.iMatrix.concat())
     canvas.value.zoomToPoint(new fabric.Point(center.left, center.top), zoom)
-    if (!localWorkspace) return
     const workspaceCenter = localWorkspace.getCenterPoint()
     const viewportTransform = canvas.value.viewportTransform
 

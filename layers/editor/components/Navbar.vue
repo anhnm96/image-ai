@@ -5,8 +5,21 @@ import { useEditorStore } from '../stores/editor'
 
 defineProps<{ activeTool: ActiveTool }>()
 const activeTool = defineModel<ActiveTool>('activeTool')
-
 const editorStore = useEditorStore()
+
+const { open, onChange } = useFileDialog({
+  accept: '.json',
+})
+
+onChange((files) => {
+  const file = files?.[0]
+  if (!file) throw new Error('No file selected')
+  const reader = new FileReader()
+  reader.readAsText(file, 'UTF-8')
+  reader.onload = () => {
+    editorStore.loadJson(reader.result as string)
+  }
+})
 </script>
 
 <template>
@@ -21,7 +34,7 @@ const editorStore = useEditorStore()
           </Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent align="start" class="min-w-60">
-          <DropdownMenuItem class="flex items-center gap-x-2">
+          <DropdownMenuItem class="flex items-center gap-x-2" @click="open">
             <Icon size="32px" name="lucide:file" />
             <div>
               <p>Open</p>
@@ -80,6 +93,7 @@ const editorStore = useEditorStore()
           <DropdownMenuContent align="end" class="min-w-60">
             <DropdownMenuItem
               class="flex items-center gap-x-2"
+              @click="editorStore.saveJson"
             >
               <Icon size="32px" name="lucide:file" />
               <div>
@@ -91,6 +105,7 @@ const editorStore = useEditorStore()
             </DropdownMenuItem>
             <DropdownMenuItem
               class="flex items-center gap-x-2"
+              @click="editorStore.savePng"
             >
               <Icon size="32px" name="lucide:file" />
               <div>
@@ -102,6 +117,7 @@ const editorStore = useEditorStore()
             </DropdownMenuItem>
             <DropdownMenuItem
               class="flex items-center gap-x-2"
+              @click="editorStore.saveJpg"
             >
               <Icon size="32px" name="lucide:file" />
               <div>
@@ -113,6 +129,7 @@ const editorStore = useEditorStore()
             </DropdownMenuItem>
             <DropdownMenuItem
               class="flex items-center gap-x-2"
+              @click="editorStore.saveSvg"
             >
               <Icon size="32px" name="lucide:file" />
               <div>

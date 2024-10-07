@@ -123,3 +123,13 @@ export function createFilter(value: string) {
 
   return effect
 };
+
+export function downloadFile(file: string, type: string) {
+  const anchorElement = document.createElement('a')
+
+  anchorElement.href = file
+  anchorElement.download = `${Date.now()}.${type}`
+  document.body.appendChild(anchorElement)
+  anchorElement.click()
+  anchorElement.remove()
+};
