@@ -1,16 +1,19 @@
 import { type ActiveTool, selectionDependentTools } from '../types'
 
 interface UseCanvasEventsProps {
-  // save: () => void
+  save: () => void
   canvas: Ref<fabric.Canvas | null>
   selectedObject: Ref<fabric.Object | null>
   selectedObjects: Ref<fabric.Object[]>
   activeTool: Ref<ActiveTool>
 };
 
-export function useCanvasEvents({ canvas, selectedObject, selectedObjects, activeTool }: UseCanvasEventsProps) {
+export function useCanvasEvents({ save, canvas, selectedObject, selectedObjects, activeTool }: UseCanvasEventsProps) {
   const stop = watch(canvas, (_canvas) => {
     if (!_canvas) return
+    _canvas.on('object:added', () => save())
+    _canvas.on('object:removed', () => save())
+    _canvas.on('object:modified', () => save())
     _canvas.on('selection:created', (e) => {
       selectedObjects.value = e.selected || []
       if (e.selected?.length) selectedObject.value = e.selected[0] || null
@@ -28,5 +31,14 @@ export function useCanvasEvents({ canvas, selectedObject, selectedObjects, activ
     })
 
     stop()
+  })
+  onScopeDispose(() => {
+    console.log('dispose')
+    canvas.value?.off('object:added')
+    canvas.value?.off('object:removed')
+    canvas.value?.off('object:modified')
+    canvas.value?.off('selection:created')
+    canvas.value?.off('selection:updated')
+    canvas.value?.off('selection:cleared')
   })
 }

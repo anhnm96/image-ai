@@ -1,9 +1,12 @@
 <script lang="ts" setup>
 import type { ActiveTool } from '../types'
 import { cn } from '~/lib/utils'
+import { useEditorStore } from '../stores/editor'
 
 defineProps<{ activeTool: ActiveTool }>()
 const activeTool = defineModel<ActiveTool>('activeTool')
+
+const editorStore = useEditorStore()
 </script>
 
 <template>
@@ -41,16 +44,20 @@ const activeTool = defineModel<ActiveTool>('activeTool')
       </Hint>
       <Hint label="Undo" side="bottom" :side-offset="10">
         <Button
+          :disabled="!editorStore.canUndo"
           variant="ghost"
           size="icon"
+          @click="editorStore.undo"
         >
           <Icon name="lucide:undo-2" />
         </Button>
       </Hint>
       <Hint label="Redo" side="bottom" :side-offset="10">
         <Button
+          :disabled="!editorStore.canRedo"
           variant="ghost"
           size="icon"
+          @click="editorStore.redo"
         >
           <Icon name="lucide:redo-2" />
         </Button>

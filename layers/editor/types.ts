@@ -15,6 +15,17 @@ export type ActiveTool =
   | 'remove-bg'
   | 'templates'
 
+export const JSON_KEYS = [
+  'name',
+  'gradientAngle',
+  'selectable',
+  'hasControls',
+  'linkData',
+  'editable',
+  'extensionType',
+  'extension',
+]
+
 export const FILL_COLOR = 'rgba(0,0,0,1)'
 export const STROKE_COLOR = 'rgba(0,0,0,1)'
 export const STROKE_WIDTH = 2

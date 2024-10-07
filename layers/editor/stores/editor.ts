@@ -1,5 +1,5 @@
 import { fabric } from 'fabric'
-import { type ActiveTool, CIRCLE_OPTIONS, DIAMOND_OPTIONS, FILL_COLOR, FONT_FAMILY, FONT_SIZE, FONT_WEIGHT, RECTANGLE_OPTIONS, STROKE_COLOR, STROKE_DASH_ARRAY, STROKE_WIDTH, TEXT_OPTIONS, TRIANGLE_OPTIONS } from '../types.js'
+import { type ActiveTool, CIRCLE_OPTIONS, DIAMOND_OPTIONS, FILL_COLOR, FONT_FAMILY, FONT_SIZE, FONT_WEIGHT, JSON_KEYS, RECTANGLE_OPTIONS, STROKE_COLOR, STROKE_DASH_ARRAY, STROKE_WIDTH, TEXT_OPTIONS, TRIANGLE_OPTIONS } from '../types.js'
 import { createFilter, isTextType } from '../utils.js'
 
 export const useEditorStore = defineStore('editor', () => {
@@ -16,7 +16,19 @@ export const useEditorStore = defineStore('editor', () => {
 
   const { autoZoom } = useAutoResize({ container, canvas })
 
-  useCanvasEvents({ canvas, selectedObject, selectedObjects, activeTool })
+  const {
+    save,
+    canRedo,
+    canUndo,
+    undo,
+    redo,
+    canvasHistory,
+    historyIndex,
+  } = useHistory({
+    canvas,
+  })
+
+  useCanvasEvents({ save, canvas, selectedObject, selectedObjects, activeTool })
 
   const { copy, paste } = useCloneCanvas({ canvas })
 
@@ -53,6 +65,9 @@ export const useEditorStore = defineStore('editor', () => {
 
     container.value = containerEl
     canvas.value = canvasEl
+
+    canvasHistory.value = [JSON.stringify(canvas.value.toJSON(JSON_KEYS))]
+    historyIndex.value = 0
   }
 
   function getWorkspace() {
@@ -395,12 +410,14 @@ export const useEditorStore = defineStore('editor', () => {
 
     workspace?.set(value)
     autoZoom()
+    save()
   }
 
   function changeBackground(value: string) {
     const workspace = getWorkspace()
     workspace?.set({ fill: value })
     canvas.value?.renderAll()
+    save()
   }
 
   const getActiveStrokeColor = computed(() => {
@@ -579,6 +596,12 @@ export const useEditorStore = defineStore('editor', () => {
       )
     },
     autoZoom,
+    canRedo,
+    canUndo,
+    undo,
+    redo,
+    canvasHistory,
+    historyIndex,
     selectedObject,
     getActiveFillColor,
     getActiveStrokeColor,
